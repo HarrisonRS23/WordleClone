@@ -20,6 +20,7 @@ X_length = 5
 Y_length = 6
 running = True
 cellSize = WIDTH // X_length
+WORD = 'TESTS'
 
 # Colors
 WHITE, BLACK = (255, 255, 255), (0, 0, 0)
@@ -56,13 +57,22 @@ WORD_LENGTH = 5
 GUESSES = 6
 grid = [[None] * WORD_LENGTH for _ in range(GUESSES)]
 
-grid[0][0] = 'A'
+"""
+TEST PURPOSES
+
+grid[0][0] = 'T'
 grid[0][1] = 'B'
-grid[0][2] = 'C'
+grid[0][2] = 'E'
 grid[0][3] = 'D'
-grid[0][4] = 'E'
-grid[1][0] = 'F'
-grid[1][1] = 'G'
+grid[0][4] = 'S'
+
+grid[1][0] = 'B'
+grid[1][1] = 'E'
+grid[1][2] = 'S'
+grid[1][3] = 'T'
+grid[1][4] = 'Y'
+
+"""
 
 
 print_grid()
@@ -80,7 +90,13 @@ def draw_board():
             cell = grid[y][x]
             rect = pygame.Rect(x * cellSize, y * cellSize, cellSize, cellSize)
             pygame.draw.rect(board, BLACK, (x * cellSize, y * cellSize, cellSize, cellSize), 3)
-
+            if cell is not None:
+                if cell == WORD[x]:
+                    pygame.draw.rect(board, GREEN, (x * cellSize, y * cellSize, cellSize, cellSize), 3)
+                elif cell in WORD:
+                    pygame.draw.rect(board, RED, (x * cellSize, y * cellSize, cellSize, cellSize), 3)                   
+                    
+            
             if cell is not None:
                 letter = font.render(cell, True, WHITE)
                 text_rect = letter.get_rect(center=rect.center)
@@ -92,6 +108,9 @@ def draw_board():
 board = draw_board()
 board_rect = board.get_rect(topleft=(0, 0))
 
+user_text = ''
+input_rect = pygame.Rect(50, 30, 140, 32) # Text box rect
+
 
 while (running):
 
@@ -100,11 +119,26 @@ while (running):
         if event.type == pygame.QUIT:
             running = False
 
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                user_text = user_text[:-1]
+            elif event.key == pygame.K_RETURN:
+                print(user_text) # Submit text
+            else:
+                user_text += event.unicode # Add character
+
+
+    
 
     screen.fill(BLACK)
     screen.blit(board, board_rect)
     group.update(event_list)
     group.draw(screen)
+
+    text_surface = font.render(user_text, True, (255, 255, 255))
+    screen.blit(text_surface, (input_rect.x , input_rect.y + 5))
+    input_rect.w = max(5, text_surface.get_width() + 10)
+
 
     pygame.display.flip()
     clock.tick(60)

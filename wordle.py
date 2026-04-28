@@ -1,10 +1,16 @@
 import pygame
+import random
+
+import nltk
+nltk.download('words')
+from nltk.corpus import words
 
 """
 TODO:
 - Add keyboard
 - Add win screen, lose screen
-- Fix Backspacing
+- Add random word
+- Add checking valid word
 
 """
 
@@ -17,8 +23,11 @@ X_length = 5
 Y_length = 6
 running = True
 cellSize = WIDTH // X_length
-WORD = 'MINAS'
 GUESS_COUNT = 0
+five_letter_words = set(w.upper() for w in words.words() if len(w) == 5)
+
+WORD = random.choice(list(five_letter_words))
+print(WORD)
 
 # Colors
 WHITE, BLACK = (255, 255, 255), (0, 0, 0)
@@ -54,10 +63,6 @@ def print_grid():
 WORD_LENGTH = 5
 GUESSES = 6
 grid = [[None] * WORD_LENGTH for _ in range(GUESSES)]
-
-
-print_grid()
-
 
 # Board setup
 
@@ -105,8 +110,10 @@ while (running):
             if event.key == pygame.K_BACKSPACE:
                 user_text = user_text[:-1]
             elif event.key == pygame.K_RETURN:
-                print(user_text) # Submit text
-                guessed = True
+                user_text = user_text[:5].upper()
+                if user_text in five_letter_words:
+                    guessed = True
+
                 
             else:
                 user_text += event.unicode # Add character
@@ -123,8 +130,6 @@ while (running):
             if GUESS_COUNT > 5:
                 print('game over')
                 break
-
-        print_grid()
         
     board = draw_board()
 

@@ -4,6 +4,7 @@ import pygame
 TODO:
 - Add keyboard
 - Add win screen, lose screen
+- Fix Backspacing
 
 """
 
@@ -16,7 +17,7 @@ X_length = 5
 Y_length = 6
 running = True
 cellSize = WIDTH // X_length
-WORD = 'tests'
+WORD = 'MINAS'
 GUESS_COUNT = 0
 
 # Colors
@@ -54,23 +55,6 @@ WORD_LENGTH = 5
 GUESSES = 6
 grid = [[None] * WORD_LENGTH for _ in range(GUESSES)]
 
-"""
-TEST PURPOSES
-
-grid[0][0] = 'T'
-grid[0][1] = 'B'
-grid[0][2] = 'E'
-grid[0][3] = 'D'
-grid[0][4] = 'S'
-
-grid[1][0] = 'B'
-grid[1][1] = 'E'
-grid[1][2] = 'S'
-grid[1][3] = 'T'
-grid[1][4] = 'Y'
-
-"""
-
 
 print_grid()
 
@@ -102,6 +86,7 @@ def draw_board():
 
     return board
 
+
 board = draw_board()
 board_rect = board.get_rect(topleft=(0, 0))
 
@@ -126,8 +111,8 @@ while (running):
             else:
                 user_text += event.unicode # Add character
                 
-
-    user_text = user_text[:5]
+    grid[GUESS_COUNT] = [None] * WORD_LENGTH
+    user_text = user_text[:5].upper()
     for i, char in enumerate(user_text):
             grid[GUESS_COUNT][i] = char
 
@@ -137,6 +122,7 @@ while (running):
             GUESS_COUNT += 1
             if GUESS_COUNT > 5:
                 print('game over')
+                break
 
         print_grid()
         

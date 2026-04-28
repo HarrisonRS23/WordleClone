@@ -2,11 +2,7 @@ import pygame
 
 """
 TODO:
-- Add typing letters
-- Add printing letters
 - Add keyboard
-- Add guesses
-- Add green, yellow, gray letters
 - Add win screen, lose screen
 
 """

@@ -1,6 +1,15 @@
 import pygame
 
+"""
+TODO:
+- Add typing letters
+- Add printing letters
+- Add keyboard
+- Add guesses
+- Add green, yellow, gray letters
+- Add win screen, lose screen
 
+"""
 
 # Game Setup 
 
@@ -29,21 +38,8 @@ pygame.display.set_caption("Wordle")
 clock = pygame.time.Clock()
 group = pygame.sprite.Group()
 
+font = pygame.font.SysFont(None, 100)
 
-# Board setup
-
-def draw_board():
-    board = pygame.Surface((cellSize * X_length, cellSize * Y_length))
-    board.fill(LIGHT_GRAY)
-
-    for x in range(X_length):
-        for y in range(Y_length):
-            pygame.draw.rect(board, BLACK, (x * cellSize, y * cellSize, cellSize, cellSize), 3)    
-
-    return board
-
-board = draw_board()
-board_rect = board.get_rect(topleft=(0, 0))
 
 # Grid logic
 
@@ -53,16 +49,48 @@ def print_grid():
     for x in range(GUESSES):
         for y in range(WORD_LENGTH):
             print(grid[x][y] , end= ' ')
-            
+
         print()
 
 WORD_LENGTH = 5
 GUESSES = 6
 grid = [[None] * WORD_LENGTH for _ in range(GUESSES)]
 
+grid[0][0] = 'A'
+grid[0][1] = 'B'
+grid[0][2] = 'C'
+grid[0][3] = 'D'
+grid[0][4] = 'E'
+grid[1][0] = 'F'
+grid[1][1] = 'G'
+
+
 print_grid()
 
 
+# Board setup
+
+def draw_board():
+    board = pygame.Surface((cellSize * X_length, cellSize * Y_length))
+    board.fill(DARK_GRAY)
+    global font, grid
+
+    for x in range(5):
+        for y in range(6):
+            cell = grid[y][x]
+            rect = pygame.Rect(x * cellSize, y * cellSize, cellSize, cellSize)
+            pygame.draw.rect(board, BLACK, (x * cellSize, y * cellSize, cellSize, cellSize), 3)
+
+            if cell is not None:
+                letter = font.render(cell, True, WHITE)
+                text_rect = letter.get_rect(center=rect.center)
+                board.blit(letter, text_rect)
+
+
+    return board
+
+board = draw_board()
+board_rect = board.get_rect(topleft=(0, 0))
 
 
 while (running):

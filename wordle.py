@@ -20,7 +20,8 @@ X_length = 5
 Y_length = 6
 running = True
 cellSize = WIDTH // X_length
-WORD = 'TESTS'
+WORD = 'tests'
+GUESS_COUNT = 0
 
 # Colors
 WHITE, BLACK = (255, 255, 255), (0, 0, 0)
@@ -90,7 +91,7 @@ def draw_board():
             cell = grid[y][x]
             rect = pygame.Rect(x * cellSize, y * cellSize, cellSize, cellSize)
             pygame.draw.rect(board, BLACK, (x * cellSize, y * cellSize, cellSize, cellSize), 3)
-            if cell is not None:
+            if cell is not None and GUESS_COUNT > y:
                 if cell == WORD[x]:
                     pygame.draw.rect(board, GREEN, (x * cellSize, y * cellSize, cellSize, cellSize), 3)
                 elif cell in WORD:
@@ -111,9 +112,9 @@ board_rect = board.get_rect(topleft=(0, 0))
 user_text = ''
 input_rect = pygame.Rect(50, 30, 140, 32) # Text box rect
 
-
 while (running):
 
+    guessed = False
     event_list = pygame.event.get()
     for event in event_list:
         if event.type == pygame.QUIT:
@@ -124,20 +125,34 @@ while (running):
                 user_text = user_text[:-1]
             elif event.key == pygame.K_RETURN:
                 print(user_text) # Submit text
+                guessed = True
+                
             else:
                 user_text += event.unicode # Add character
+                
 
+    user_text = user_text[:5]
+    for i, char in enumerate(user_text):
+            grid[GUESS_COUNT][i] = char
 
-    
+    if guessed == True:
+        if len(user_text) == 5:
+            user_text = ''
+            GUESS_COUNT += 1
+            if GUESS_COUNT > 5:
+                print('game over')
+
+        print_grid()
+        
+    board = draw_board()
+
 
     screen.fill(BLACK)
     screen.blit(board, board_rect)
     group.update(event_list)
     group.draw(screen)
 
-    text_surface = font.render(user_text, True, (255, 255, 255))
-    screen.blit(text_surface, (input_rect.x , input_rect.y + 5))
-    input_rect.w = max(5, text_surface.get_width() + 10)
+
 
 
     pygame.display.flip()
